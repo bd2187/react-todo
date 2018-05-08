@@ -1,14 +1,35 @@
 import React, { Component } from "react";
 
 class Footer extends Component {
+  changeFilter(filter) {
+    this.props.changeFilter(filter);
+  }
+
   render() {
+    var numberOfTodos = this.props.numberOfTodos;
     return (
       <div>
-        <p>2 items</p>
-        <button>All</button>
-        <button>Active</button>
-        <button>Complete</button>
-        <button>Clear Completed</button>
+        {numberOfTodos === 0 ? null : <p>{numberOfTodos} items</p>}
+
+        <button
+          id="all_todos_btn"
+          onClick={this.changeFilter.bind(this, "all")}
+        >
+          All
+        </button>
+        <button
+          id="active_todos_btn"
+          onClick={this.changeFilter.bind(this, "none")}
+        >
+          Active
+        </button>
+        <button
+          id="complete_todos_btn"
+          onClick={this.changeFilter.bind(this, "complete")}
+        >
+          Complete
+        </button>
+        <button id="clear_completed_btn">Clear Completed</button>
       </div>
     );
   }
@@ -45,20 +66,6 @@ class TodoList extends Component {
   render() {
     var todos = this.renderTodoItems(this.props.todos);
     return <ul>{todos}</ul>;
-    return (
-      <ul>
-        <li>
-          <input type="checkbox" id="work" />
-          <label htmlFor="work">Work</label>
-          <button>Delete</button>
-        </li>
-        <li>
-          <input type="checkbox" id="eat" />
-          <label htmlFor="eat">Eat</label>
-          <button>Delete</button>
-        </li>
-      </ul>
-    );
   }
 }
 
@@ -85,13 +92,23 @@ class TodoContainer extends Component {
       filter: "none",
       userInput: ""
     };
+
+    this.changeFilter = this.changeFilter.bind(this);
   }
+
+  changeFilter(filter) {
+    this.setState({ filter: filter });
+  }
+
   render() {
     return (
       <div>
         <UserInput />
         <TodoList todos={this.state.todos} />
-        <Footer />
+        <Footer
+          numberOfTodos={this.state.todos.length}
+          changeFilter={this.changeFilter}
+        />
       </div>
     );
   }
