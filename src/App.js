@@ -36,14 +36,22 @@ class Footer extends Component {
 }
 
 class TodoItem extends Component {
+  handleChange(todo, e) {
+    this.props.toggleTodo(todo);
+  }
+
   render() {
     var todo = this.props.todo.task;
-    var id = this.props.id;
+    var id = this.props.todo.id;
+
     return (
       <li>
-        <input type="checkbox" id={id} />
+        <input
+          type="checkbox"
+          id={id}
+          onChange={e => this.handleChange(this.props.todo, e)}
+        />
         <label htmlFor={id}>{todo}</label>
-        <button>Edit</button>
         <button>Delete</button>
       </li>
     );
@@ -57,9 +65,11 @@ class TodoList extends Component {
   }
 
   renderTodoItems(todos = []) {
-    return todos.map(function(todo, index) {
-      let key = `${todo.task}_${index}`;
-      return <TodoItem key={key} todo={todo} id={key} />;
+    return todos.map((todo, index) => {
+      let key = `${todo.id}`;
+      return (
+        <TodoItem key={key} todo={todo} toggleTodo={this.props.toggleTodo} />
+      );
     });
   }
 
@@ -82,11 +92,13 @@ class TodoContainer extends Component {
       todos: [
         {
           task: "work",
-          complete: false
+          complete: false,
+          id: "work_001"
         },
         {
           task: "eat",
-          complete: false
+          complete: false,
+          id: "eat_002"
         }
       ],
       filter: "none",
@@ -94,17 +106,31 @@ class TodoContainer extends Component {
     };
 
     this.changeFilter = this.changeFilter.bind(this);
+    this.toggleTodo = this.toggleTodo.bind(this);
   }
 
   changeFilter(filter) {
     this.setState({ filter: filter });
   }
 
+  toggleTodo(usersTodo) {
+    var updatedTodos = this.state.todos.map(function(todo) {
+      if (todo.id === usersTodo.id) {
+        usersTodo.complete = !usersTodo.complete;
+        return usersTodo;
+      } else {
+        return todo;
+      }
+    });
+
+    this.setState({ todos: updatedTodos });
+  }
+
   render() {
     return (
       <div>
         <UserInput />
-        <TodoList todos={this.state.todos} />
+        <TodoList todos={this.state.todos} toggleTodo={this.toggleTodo} />
         <Footer
           numberOfTodos={this.state.todos.length}
           changeFilter={this.changeFilter}
