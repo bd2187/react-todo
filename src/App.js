@@ -14,8 +14,37 @@ class Footer extends Component {
   }
 }
 
-class TodoList extends Component {
+class TodoItem extends Component {
   render() {
+    var todo = this.props.todo.task;
+    var id = this.props.id;
+    return (
+      <li>
+        <input type="checkbox" id={id} />
+        <label htmlFor={id}>{todo}</label>
+        <button>Edit</button>
+        <button>Delete</button>
+      </li>
+    );
+  }
+}
+
+class TodoList extends Component {
+  constructor(props) {
+    super(props);
+    this.renderTodoItems = this.renderTodoItems.bind(this);
+  }
+
+  renderTodoItems(todos = []) {
+    return todos.map(function(todo, index) {
+      let key = `${todo.task}_${index}`;
+      return <TodoItem key={key} todo={todo} id={key} />;
+    });
+  }
+
+  render() {
+    var todos = this.renderTodoItems(this.props.todos);
+    return <ul>{todos}</ul>;
     return (
       <ul>
         <li>
@@ -61,7 +90,7 @@ class TodoContainer extends Component {
     return (
       <div>
         <UserInput />
-        <TodoList />
+        <TodoList todos={this.state.todos} />
         <Footer />
       </div>
     );
