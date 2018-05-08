@@ -18,8 +18,16 @@ class TodoList extends Component {
   render() {
     return (
       <ul>
-        <li>Work</li>
-        <li>Eat</li>
+        <li>
+          <input type="checkbox" id="work" />
+          <label htmlFor="work">Work</label>
+          <button>Delete</button>
+        </li>
+        <li>
+          <input type="checkbox" id="eat" />
+          <label htmlFor="eat">Eat</label>
+          <button>Delete</button>
+        </li>
       </ul>
     );
   }
@@ -32,6 +40,23 @@ class UserInput extends Component {
 }
 
 class TodoContainer extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      todos: [
+        {
+          task: "work",
+          complete: false
+        },
+        {
+          task: "eat",
+          complete: false
+        }
+      ],
+      filter: "none",
+      userInput: ""
+    };
+  }
   render() {
     return (
       <div>
@@ -42,12 +67,6 @@ class TodoContainer extends Component {
     );
   }
 }
-// TodoContainer
-// input
-// todolist
-// footer
-// filters
-// clear todo
 
 class App extends Component {
   render() {
