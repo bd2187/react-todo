@@ -26,6 +26,7 @@ class TodoContainer extends Component {
     this.changeFilter = this.changeFilter.bind(this);
     this.toggleTodo = this.toggleTodo.bind(this);
     this.addTodo = this.addTodo.bind(this);
+    this.deleteTodo = this.deleteTodo.bind(this);
   }
 
   changeFilter(filter) {
@@ -55,11 +56,29 @@ class TodoContainer extends Component {
     this.setState({ todos: [...this.state.todos, todoObj] });
   }
 
+  deleteTodo(todoId) {
+    // Iterate through todos array
+    var duplicateTodosArr = [...this.state.todos];
+
+    // find todo with matching id
+    var updatedTodosArr = duplicateTodosArr.filter(function(todo) {
+      if (todo.id !== todoId) {
+        return todo;
+      }
+    });
+
+    this.setState({ todos: updatedTodosArr });
+  }
+
   render() {
     return (
       <div>
         <UserInput addTodo={this.addTodo} />
-        <TodoList todos={this.state.todos} toggleTodo={this.toggleTodo} />
+        <TodoList
+          todos={this.state.todos}
+          toggleTodo={this.toggleTodo}
+          deleteTodo={this.deleteTodo}
+        />
         <Footer
           numberOfTodos={this.state.todos.length}
           changeFilter={this.changeFilter}
