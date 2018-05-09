@@ -80,8 +80,37 @@ class TodoList extends Component {
 }
 
 class UserInput extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: ""
+    };
+
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleKeyUp = this.handleKeyUp.bind(this);
+  }
+
+  handleInputChange(e) {
+    this.setState({ value: e.target.value });
+  }
+
+  handleKeyUp(e) {
+    if (e.keyCode === 13 && this.state.value.trim() !== "") {
+      this.props.addTodo(this.state.value);
+      this.setState({ value: "" });
+    }
+  }
+
   render() {
-    return <input type="text" placeholder="What needs to be done?" />;
+    return (
+      <input
+        value={this.state.value}
+        type="text"
+        placeholder="What needs to be done?"
+        onChange={this.handleInputChange}
+        onKeyUp={this.handleKeyUp}
+      />
+    );
   }
 }
 
@@ -93,12 +122,12 @@ class TodoContainer extends Component {
         {
           task: "work",
           complete: false,
-          id: "work_001"
+          id: "work_1"
         },
         {
           task: "eat",
           complete: false,
-          id: "eat_002"
+          id: "eat_2"
         }
       ],
       filter: "none",
@@ -107,6 +136,7 @@ class TodoContainer extends Component {
 
     this.changeFilter = this.changeFilter.bind(this);
     this.toggleTodo = this.toggleTodo.bind(this);
+    this.addTodo = this.addTodo.bind(this);
   }
 
   changeFilter(filter) {
@@ -126,10 +156,20 @@ class TodoContainer extends Component {
     this.setState({ todos: updatedTodos });
   }
 
+  addTodo(usersTodo) {
+    var todoObj = {
+      task: usersTodo,
+      completed: false,
+      id: `${usersTodo}_${this.state.todos.length + 1}`
+    };
+
+    this.setState({ todos: [...this.state.todos, todoObj] });
+  }
+
   render() {
     return (
       <div>
-        <UserInput />
+        <UserInput addTodo={this.addTodo} />
         <TodoList todos={this.state.todos} toggleTodo={this.toggleTodo} />
         <Footer
           numberOfTodos={this.state.todos.length}
