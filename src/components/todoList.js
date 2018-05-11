@@ -18,6 +18,16 @@ class TodoItem extends Component {
   render() {
     var todo = this.props.todo.task;
     var id = this.props.todo.id;
+    var complete = this.props.todo.complete;
+    var filter = this.props.filter;
+
+    if (filter === "active" && complete) {
+      return null;
+    }
+
+    if (filter === "completed" && !complete) {
+      return null;
+    }
 
     return (
       <li>
@@ -25,6 +35,7 @@ class TodoItem extends Component {
           type="checkbox"
           id={id}
           onChange={e => this.handleChange(this.props.todo, e)}
+          checked={complete}
         />
         <label htmlFor={id}>{todo}</label>
         <button data-id={id} onClick={this.deleteTodo}>
@@ -50,6 +61,7 @@ class TodoList extends Component {
           todo={todo}
           toggleTodo={this.props.toggleTodo}
           deleteTodo={this.props.deleteTodo}
+          filter={this.props.filter}
         />
       );
     });
