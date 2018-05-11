@@ -7,25 +7,26 @@ class Footer extends Component {
 
   render() {
     var numberOfTodos = this.props.numberOfTodos;
+
     return (
       <div>
         {numberOfTodos === 0 ? null : <p>{numberOfTodos} items</p>}
 
         <button
           id="all_todos_btn"
-          onClick={this.changeFilter.bind(this, "all")}
+          onClick={this.changeFilter.bind(this, "none")}
         >
           All
         </button>
         <button
           id="active_todos_btn"
-          onClick={this.changeFilter.bind(this, "none")}
+          onClick={this.changeFilter.bind(this, "active")}
         >
           Active
         </button>
         <button
           id="complete_todos_btn"
-          onClick={this.changeFilter.bind(this, "complete")}
+          onClick={this.changeFilter.bind(this, "completed")}
         >
           Complete
         </button>
