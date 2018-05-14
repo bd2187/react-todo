@@ -27,10 +27,12 @@ class TodoContainer extends Component {
     this.toggleTodo = this.toggleTodo.bind(this);
     this.addTodo = this.addTodo.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
+    this.clearCompleted = this.clearCompleted.bind(this);
+    this.calculateNumberOfTodos = this.calculateNumberOfTodos.bind(this);
   }
 
   changeFilter(filter) {
-    this.setState({ filter: filter });
+    this.setState({ filter });
   }
 
   toggleTodo(usersTodo) {
@@ -62,12 +64,38 @@ class TodoContainer extends Component {
 
     // find todo with matching id
     var updatedTodosArr = duplicateTodosArr.filter(function(todo) {
-      if (todo.id !== todoId) {
-        return todo;
-      }
+      return todo.id !== todoId ? todo : null;
     });
 
     this.setState({ todos: updatedTodosArr });
+  }
+
+  clearCompleted() {
+    var incompleteTodos = [...this.state.todos].filter(function(todo) {
+      return !todo.complete ? todo : null;
+    });
+
+    this.setState({ todos: incompleteTodos });
+  }
+
+  calculateNumberOfTodos() {
+    switch (this.state.filter) {
+      case "none":
+        return this.state.todos.length;
+
+      case "active":
+        return this.state.todos.reduce(function(acc, currentItem) {
+          return !currentItem.complete ? acc + 1 : acc + 0;
+        }, 0);
+
+      case "completed":
+        return this.state.todos.reduce(function(acc, currentItem) {
+          return currentItem.complete ? acc + 1 : acc + 0;
+        }, 0);
+
+      default:
+        return 0;
+    }
   }
 
   render() {
@@ -78,10 +106,13 @@ class TodoContainer extends Component {
           todos={this.state.todos}
           toggleTodo={this.toggleTodo}
           deleteTodo={this.deleteTodo}
+          filter={this.state.filter}
         />
         <Footer
-          numberOfTodos={this.state.todos.length}
+          numberOfTodos={this.calculateNumberOfTodos()}
           changeFilter={this.changeFilter}
+          filter={this.state.filter}
+          clearCompleted={this.clearCompleted}
         />
       </div>
     );
